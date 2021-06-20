@@ -18,7 +18,7 @@ A quick python script to fetch your Geometry Dash save data from a server of you
 
 - password -> this field is for your password on the target server
 
-After setting up config.ini, youcan either run the python script in the command prompt using `python3 <current directory>/save-finder.py` or by executing the `run.bat` file provided
+After setting up config.ini, you can either run the python script in the command prompt using `python3 <current directory>/save_finder.py` or by executing the `run.bat` file provided
 
 # Notes
 

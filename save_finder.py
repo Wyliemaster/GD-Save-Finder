@@ -10,7 +10,7 @@ def xor_cipher(string: str, key: int) -> str:
 
 
 print("Reading Config")
-with open('config.ini', 'r') as f:
+with open('config.json', 'r') as f:
     config_data = json.load(f)
 
 server = config_data["server"]

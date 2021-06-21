@@ -1,27 +1,26 @@
 import requests
-import itertools
 import os
 import json
 
 
 def xor_cipher(string: str, key: int) -> str:
     result = ""
-    for char in string:
-        result += chr(ord(char) ^ key)
+    for char in string: result += chr(ord(char) ^ key)
     return result
 
 
 print("Reading Config")
-with open('config.ini', 'r') as config:
-    config_data = config.read().split()
-    server = config_data[0].split('=')[1]
-    userName = config_data[1].split('=')[1]
-    password = config_data[2].split('=')[1]
+with open('config.json', 'r') as f:
+    config_data = json.load(f)
 
-print("Data collected", "requesting save data")
+server = config_data["server"]
+username = config_data["username"]
+password = config_data["password"]
+
+print("Data collected. Requesting save data")
 
 data = {
-    "userName": userName,
+    "userName": username,
     "password": password,
     "secret": "Wmfv3899gc9",
     "gameVersion": 21,
@@ -30,49 +29,60 @@ data = {
 }
 
 req = requests.post(
-    "{}/database/accounts/syncGJAccountNew.php".format(server), data=data)
+    f"{server}/accounts/syncGJAccountNew.php",
+    data=data
+)
 
 print("Responsed Received")
 
 if req.text == '-11':
-    print("Login Credentials Incorrect - Error Code {}".format(req.text))
+    print(f"Login Credentials Incorrect - Error Code {req.text}")
     exit()
 
 elif req.text == '-6':
-    print("The server currently has too much traffic to process the request. Please try again later - Error Code: {}".format(req.text))
+    print(f"The server currently has too much traffic to process the request. Please try again later - Error Code: {req.text}")
     exit()
 
 elif len(req.text) < 10:
-    print("Unknown Error - Error Code: {}".format(req.text))
+    print(f"Unknown Error - Error Code: {req.text}")
+    exit()
+elif "<html>" in req.text:
+    print("Request returned a HTML page, not GD response!")
+    exit()
+elif req.text.count(";") != 6:
+    print("Incorrect data sent (probably no data saved to account).")
     exit()
 
-response_data = req.text.split(';')
-
-
-CCGameManager, CCLocalLevels, game_version, binary_version, a1, a2 = response_data
+(
+    cc_game_manager,
+    cc_local_levels,
+    game_version,
+    binary_version,
+    a1,
+    a2
+) = req.text.split(';')
 
 print("Writing Saves")
 
 with open('CCGameManager.dat', 'w') as file:
-    file.write(xor_cipher(CCGameManager, 0xB))
+    file.write(xor_cipher(cc_game_manager, 0xB))
 
 with open('CCLocalLevels.dat', 'w') as file:
-    file.write(xor_cipher(CCLocalLevels, 0xB))
+    file.write(xor_cipher(cc_local_levels, 0xB))
 
-print("saves can be found in {}".format(os.getcwd()),
+print(f"Saves can be found in {os.getcwd()}",
       "Preparing a JSON with response Data")
 
-SaveObj = {
-    "UserName": userName,
+save_obj = {
+    "UserName": username,
     "GameVersion": game_version,
     "BinaryVersion": binary_version,
-    "CCGameManager.dat": CCGameManager,
-    "CCLocalLevels.dat": CCLocalLevels,
+    "CCGameManager.dat": cc_game_manager,
+    "CCLocalLevels.dat": cc_local_levels,
     "UnknownData": a1,
     "UnknownData2": a2
 }
 
-Save_JSON = json.dumps(SaveObj, indent=4)
+save_json = json.dumps(save_obj, indent=4)
 
-with open('save_data.json', 'w') as save:
-    save.write(Save_JSON)
+with open('save_data.json', 'w') as save: save.write(save_json)

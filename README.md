@@ -12,15 +12,17 @@ Currently, 3 files will be generated after using this script:
 
 **CCGameManager.dat** and **CCLocalLevels.dat** are your saves and can be placed in `%localappdata%/GeometryDash/`. The **save_data.json** is a seperate file generated which seperates the raw response and assigns each component of the response with a name, the JSON includes some data that is excluded from your CCFiles however, the way to access the content of this other data is currently unknown
 
-# Requirements
+## Requirements
 
-- Python 3 (i've only tested on 3.9)
+- Python >= 3.6
 
 - A Geometry Dash account with a backed up save
 
-# Usage
+## Usage
 
-**config.ini** contains essential data in order to successfully use this program.
+- Copy **config.sample.json** to **config.json**.
+
+- **config.json** contains essential data in order to successfully use this program.
 
 - **server** -> The target server you want to fetch your save from. By default it is the Geometry Dash Data Server however, it can be used for GDPS's if you type `http://<target server>/database`
 
@@ -30,10 +32,8 @@ Currently, 3 files will be generated after using this script:
 
 After setting up config.ini, you can either run the python script in the command prompt using `python3 <current directory>/save_finder.py` or by executing the `run.bat` file provided
 
-# Notes
+## Notes
 
 - This tool is for ***Geometry Dash 2.1***
 
-- This tool uses the [Requests](https://pypi.org/project/requests/) Module. There is a chance you may get an error due to not having the module - To install the module, open your command prompt and execute `python3 -m pip install requests`
-
-
+- This tool utilises a few modules from the official Python Package Index. They are required for the tool to run, and are able to obtain them through running the command `python3 -m pip install -r requirements.txt`.

@@ -5,17 +5,17 @@ import json
 
 def xor_cipher(string: str, key: int) -> str:
     result = ""
-    for char in string:
-        result += chr(ord(char) ^ key)
+    for char in string: result += chr(ord(char) ^ key)
     return result
 
 
 print("Reading Config")
-with open('config.ini', 'r') as config:
-    config_data = config.read().split()
-    server = config_data[0].split('=')[1]
-    username = config_data[1].split('=')[1]
-    password = config_data[2].split('=')[1]
+with open('config.ini', 'r') as f:
+    config_data = json.load(f)
+
+server = config_data["server"]
+username = config_data["username"]
+password = config_data["password"]
 
 print("Data collected. Requesting save data")
 
@@ -29,7 +29,8 @@ data = {
 }
 
 req = requests.post(
-    f"{server}/database/accounts/syncGJAccountNew.php", data=data
+    f"{server}/database/accounts/syncGJAccountNew.php",
+    data=data
 )
 
 print("Responsed Received")

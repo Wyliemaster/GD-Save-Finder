@@ -20,7 +20,7 @@ Currently, 3 files will be generated after using this script:
 
 ## Usage
 
-**config.ini** contains essential data in order to successfully use this program.
+**config.json** contains essential data in order to successfully use this program.
 
 - **server** -> The target server you want to fetch your save from. By default it is the Geometry Dash Data Server however, it can be used for GDPS's if you type `http://<target server>/database`
 

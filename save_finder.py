@@ -29,7 +29,7 @@ data = {
 }
 
 req = requests.post(
-    f"{server}/database/accounts/syncGJAccountNew.php",
+    f"{server}/accounts/syncGJAccountNew.php",
     data=data
 )
 
@@ -45,6 +45,12 @@ elif req.text == '-6':
 
 elif len(req.text) < 10:
     print(f"Unknown Error - Error Code: {req.text}")
+    exit()
+elif "<html>" in req.text:
+    print("Request returned a HTML page, not GD response!")
+    exit()
+elif req.text.count(";") != 6:
+    print("Incorrect data sent (probably no data saved to account).")
     exit()
 
 (
